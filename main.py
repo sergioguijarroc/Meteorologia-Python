@@ -1,4 +1,5 @@
 import requests
+
 import json
 
 
@@ -45,8 +46,6 @@ try:
             )
         elif respuesta == "no":
             print("Usted se lo pierde, ¡Que tenga un buen día!")
-        else:
-            print("Error de la respuesta, dígame otra")
 
     # Si hay un error en la petición, devuelve esto:
     else:
