@@ -1,5 +1,5 @@
 import requests
-
+import openai
 import json
 
 
@@ -21,6 +21,15 @@ try:
         tempActual = datosClima["main"]["temp"]
         tempMax = datosClima["main"]["temp_max"]
         tempMin = datosClima["main"]["temp_min"]
+
+        openai.api_key = "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"
+        completion = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=f"Este es el tiempo en {provincia}, la temperatura actual es de {tempActual}ºC, la temperatura máxima es de {tempMax}ºC y la temperatura mínima es de {tempMin}ºC. ¿Podrías hacerme un resumen y un comentario gracioso acerca estos datos?",
+            max_tokens=2048,
+        )
+
+        print(completion.choices[0].text)
 
         # Imprimo la información
         print(
