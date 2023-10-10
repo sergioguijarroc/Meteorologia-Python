@@ -29,6 +29,8 @@ try:
             max_tokens=2048,
         )
 
+        # prompt = f"Los datos del pronóstico del tiempo en {provincia} son los siguientes:\n\n- Temperatura actual: {tempActual}°C\n- Temperatura máxima: {tempMax}°C\n- Temperatura mínima: {tempMin}°C\n- Sensación térmica: {sensTermica}°C\n- Velocidad del viento: {velViento} m/s\n- Nivel de nubes: {nubes}%\n\n ¿Qué conclusiones podemos sacar de esta información? ¿Cómo afectará esta temperatura a las actividades al aire libre en {provincia}? ¿Algún consejo basado en estos datos para los residentes?"
+
         print(completion.choices[0].text)
 
         # Imprimo la información
