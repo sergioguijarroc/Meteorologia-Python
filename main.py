@@ -1,7 +1,12 @@
 import requests
 import json
+import pyttsx3
+
+# Inicializar el motor de voz
+engine = pyttsx3.init()
 
 
+engine.say("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
 print("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
 # Solicitar el nombre de la provincia
 provincia = input("Dime cualquier lugar del mundo el cual quieres consultar: ")
@@ -19,7 +24,6 @@ try:
 
         # prompt = f"Los datos del pronóstico del tiempo en {provincia} son los siguientes:\n\n- Temperatura actual: {tempActual}°C\n- Temperatura máxima: {tempMax}°C\n- Temperatura mínima: {tempMin}°C\n- Sensación térmica: {sensTermica}°C\n- Velocidad del viento: {velViento} m/s\n- Nivel de nubes: {nubes}%\n\n ¿Qué conclusiones podemos sacar de esta información? ¿Cómo afectará esta temperatura a las actividades al aire libre en {provincia}? ¿Algún consejo basado en estos datos para los residentes?"
 
-        # Pregunto al usuario que quiere saber
     # Realiza la solicitud GET a la URL para comprobar que comunica.
     response = requests.get(url)
 
