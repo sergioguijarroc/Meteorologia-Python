@@ -4,7 +4,7 @@ import json
 
 print("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
 # Solicitar el nombre de la provincia
-provincia = input("Dime la provincia que quieres consultar: ")
+provincia = input("Dime cualquier lugar del mundo el cual quieres consultar: ")
 
 # URL de la API de pronóstico del tiempo (sustituye por la URL correcta)
 url = f"https://api.openweathermap.org/data/2.5/weather?q={provincia}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"
@@ -18,17 +18,6 @@ try:
         datosClima = response.json()
 
         # prompt = f"Los datos del pronóstico del tiempo en {provincia} son los siguientes:\n\n- Temperatura actual: {tempActual}°C\n- Temperatura máxima: {tempMax}°C\n- Temperatura mínima: {tempMin}°C\n- Sensación térmica: {sensTermica}°C\n- Velocidad del viento: {velViento} m/s\n- Nivel de nubes: {nubes}%\n\n ¿Qué conclusiones podemos sacar de esta información? ¿Cómo afectará esta temperatura a las actividades al aire libre en {provincia}? ¿Algún consejo basado en estos datos para los residentes?"
-
-        # Menú
-        print("--------------------Menu--------------------")
-        print("1. Temperatura actual")
-        print("2. Temperatura máxima")
-        print("3. Temperatura mínima")
-        print("4. Sensación térmica")
-        print("5. Velocidad del viento")
-        print("6. Nivel de nubes")
-        print("7. Salir")
-        print("--------------------------------------------")
 
         # Pregunto al usuario que quiere saber
     # Realiza la solicitud GET a la URL para comprobar que comunica.
@@ -51,7 +40,7 @@ try:
 
         # Pregunto al usuario que quiere saber
         salir = False
-        while not salir:
+        while salir == False:
             opcion = int(input("Elige una opción: "))
             if opcion in range(1, 8):
                 if opcion == 1:
@@ -93,10 +82,6 @@ try:
                 print("Opción incorrecta, elige una opción del 1 al 7.")
 
         # Si hay un error en la petición, devuelve esto:
-        else:
-            print(
-                f"Error al realizar la solicitud. Código de estado: {response.status_code}"
-            )
 
     # Si hay un error en la petición, devuelve esto:
     else:
