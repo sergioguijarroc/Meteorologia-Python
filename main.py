@@ -1,12 +1,13 @@
 import requests
 import json
-import pyttsx3
+
+# import pyttsx3
 
 # Inicializar el motor de voz
-engine = pyttsx3.init()
+# engine = pyttsx3.init()
 
 
-engine.say("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
+# engine.say("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
 print("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
 # Solicitar el nombre de la provincia
 provincia = input("Dime cualquier lugar del mundo el cual quieres consultar: ")
@@ -26,7 +27,6 @@ try:
 
     # Realiza la solicitud GET a la URL para comprobar que comunica.
     response = requests.get(url)
-
     # Si la solicitud se hace con éxito, el código de la respuesta devuelve 200.
     if response.status_code == 200:
         datosClima = response.json()
@@ -41,6 +41,7 @@ try:
         print("6. Nivel de nubes")
         print("7. Salir")
         print("--------------------------------------------")
+        # print("--------------------Menu--------------------\n1. Temperatura actual\n2. Temperatura máxima\n3. Temperatura mínima\n4. Sensación térmica\n5. Velocidad del viento\n6. Nivel de nubes\n7. Salir\n--------------------------------------------")
 
         # Pregunto al usuario que quiere saber
         salir = False
@@ -84,8 +85,6 @@ try:
                     salir = True
             else:
                 print("Opción incorrecta, elige una opción del 1 al 7.")
-
-        # Si hay un error en la petición, devuelve esto:
 
     # Si hay un error en la petición, devuelve esto:
     else:
