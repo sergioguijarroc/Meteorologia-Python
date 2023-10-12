@@ -40,7 +40,6 @@ def obtenerTemperaturaMinimaDia(fecha):
             minTempItemActual = item["main"]["temp_min"]
             if minTempItemActual < minTemp:
                 minTemp = minTempItemActual
-
     return minTemp
 
 
@@ -53,7 +52,7 @@ def obtenerJsonTiempoActual(lugar):
             return responseActual.json()
         else:
             print(
-                f"Error al realizar la solicitud. Código de estado: {responseActual.status_code}, seleccione la opción 4 para cambiar el lugar a consultar."
+                f"Error al realizar la solicitud al intentar obtener los datos del tiempo Actual. Código de estado: {responseActual.status_code}"
             )
     # Si hay algún otro error cualquiera que no podemos controlar, salta la excepción.
     except requests.exceptions.RequestException as e:
@@ -61,7 +60,7 @@ def obtenerJsonTiempoActual(lugar):
 
 
 def obtenerJsonTiempoEn5Dias(lugar):
-    urlTiempo5Dias = f"https://api.openweathermap.org/data/2.5/forecast?q={lugarConsultado}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"
+    urlTiempo5Dias = f"https://api.openweathermap.org/data/2.5/forecast?q={lugar}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"
     try:
         # Realiza la solicitud GET a la urlTiempoActual para comprobar que comunica.
         response5Dias = requests.get(urlTiempo5Dias)
@@ -69,7 +68,7 @@ def obtenerJsonTiempoEn5Dias(lugar):
             return response5Dias.json()
         else:
             print(
-                f"Error al realizar la solicitud. Código de estado: {response5Dias.status_code}, seleccione la opción 4 para cambiar el lugar a consultar."
+                f"Error al realizar la solicitud al intentar obtener los datos del tiempo en 5 Días Código de estado: {response5Dias.status_code}"
             )
     # Si hay algún otro error cualquiera que no podemos controlar, salta la excepción.
     except requests.exceptions.RequestException as e:
@@ -77,6 +76,7 @@ def obtenerJsonTiempoEn5Dias(lugar):
 
 
 def opcion1(datosClimaActual):
+    print("--------------------Opción1-------------------- \n")
     # Cargamos en variables desde el json todos los datos que vamos a necesitar
     tempActual = datosClimaActual["main"]["temp"]
     tempMax = datosClimaActual["main"]["temp_max"]
@@ -96,16 +96,19 @@ def opcion1(datosClimaActual):
     print(f"La sensación térmica es de : {sensTermica} ºC")
     print(f"La velocidad del viento es de : {velViento} KM/h")
     print(f"El nivel de nubes es de : {nubes} %, por lo tanto está {nubosidad}")
+    print("--------------------------------------------")
 
 
 def opcion2(datosClima5Dias):
+    print("--------------------Opción2--------------------")
     # bucle for tradicional para usar el range y poder iterar en los 4 días siguientes
     for i in range(1, 5):
         fechaAProcesar = fechaProximosDiasString(datetime.now(), i)
         maxTemp = obtenerTemperaturaMaximaDia(fechaAProcesar)
         minTemp = obtenerTemperaturaMinimaDia(fechaAProcesar)
-        print(f"La temperatura máxima para {fechaAProcesar} es de {maxTemp}")
-        print(f"La temperatura mínima para {fechaAProcesar} es de {minTemp}")
+        print(f"La temperatura máxima para {fechaAProcesar} es de {maxTemp} ºC")
+        print(f"La temperatura mínima para {fechaAProcesar} es de {minTemp} ºC\n")
+    print("--------------------------------------------")
 
 
 def fechaProximosDiasString(fecha, dias):
@@ -116,16 +119,23 @@ def fechaProximosDiasString(fecha, dias):
     )  # Lo devuelvo en ese formato para que se pueda comparar con el json que nos devuelve la api.
 
 
-# engine.say("Bienvenido a tu meteorólogo de confianza, selecciona una opción para ")
-print("Bienvenido a tu meteorólogo de confianza")
-# Solicitar el nombre de la lugarConsultado
-lugarConsultado = input(
-    "Para empezar, dime cualquier lugar del mundo el cual quieres consultar: "
-)
+def obtener_datos_clima():
+    while True:
+        lugar = input(
+            "Para empezar, dime cualquier lugar del mundo el cual quieres consultar: "
+        )
+        datos_clima_actual = obtenerJsonTiempoActual(lugar)
+        datos_clima_5dias = obtenerJsonTiempoEn5Dias(lugar)
 
-# Declaramos dos variables globales que nos van a servir en nuestro programa:
-datosClimaActual = obtenerJsonTiempoActual(lugarConsultado)
-datosClima5Dias = obtenerJsonTiempoEn5Dias(lugarConsultado)
+        if datos_clima_actual is not None and datos_clima_5dias is not None:
+            return lugar, datos_clima_actual, datos_clima_5dias
+        else:
+            print("Lugar no encontrado. Introduce un lugar válido.")
+
+
+print("Bienvenido a tu meteorólogo de confianza")
+# Declaramos variables globales
+lugarConsultado, datosClimaActual, datosClima5Dias = obtener_datos_clima()
 
 
 # Menú
@@ -146,12 +156,12 @@ while salir == False:
         elif opcion == 3:
             print("En desarrollo")
         elif opcion == 4:
-            lugarConsultado = input("Dime un nuevo lugar a consultar: ")
-            print(f"Has elegido {lugarConsultado}")
-            datosClimaActual = obtenerJsonTiempoActual(lugarConsultado)
-            datosClima5Dias = obtenerJsonTiempoEn5Dias(lugarConsultado)
+            print("--------------------Opción4--------------------")
+            lugarConsultado, datosClimaActual, datosClima5Dias = obtener_datos_clima()
+            print("--------------------------------------------")
         elif opcion == 5:
             print("¡Que tenga un buen día!")
+            print("Cerrando el programa...")
             salir = True
     else:
         print("Opción incorrecta, elige una opción del 1 al 5.")
