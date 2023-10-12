@@ -53,7 +53,7 @@ def obtenerJsonTiempoActual(lugar):
             return responseActual.json()
         else:
             print(
-                f"Error al realizar la solicitud. Código de estado: {responseActual.status_code}"
+                f"Error al realizar la solicitud. Código de estado: {responseActual.status_code}, seleccione la opción 4 para cambiar el lugar a consultar."
             )
     # Si hay algún otro error cualquiera que no podemos controlar, salta la excepción.
     except requests.exceptions.RequestException as e:
@@ -69,7 +69,7 @@ def obtenerJsonTiempoEn5Dias(lugar):
             return response5Dias.json()
         else:
             print(
-                f"Error al realizar la solicitud. Código de estado: {response5Dias.status_code}"
+                f"Error al realizar la solicitud. Código de estado: {response5Dias.status_code}, seleccione la opción 4 para cambiar el lugar a consultar."
             )
     # Si hay algún otro error cualquiera que no podemos controlar, salta la excepción.
     except requests.exceptions.RequestException as e:
