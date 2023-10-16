@@ -154,34 +154,31 @@ def opcion3(datosClima5Dias):
         )
     print(f"El día deseado es {diaDeseado}")
     # Ahora, voy a pedir la hora
-    horaDeseada = int(
-        input("Introduce una hora: (0-23)")
-    )  # Si el usuario introduce 23, el programa no funciona ya que redondea para arriba y no hay datos para esa hora en ese día en concreto
+    if diaDeseado == int(
+        limiteDia
+    ):  # Si el día deseado es el último día, la hora máxima a consultar es 22
+        print(
+            f"El día {limiteDia} es el último día que se puede consultar, por lo tanto, la hora máxima a consultar es 22"
+        )
+        horaDeseada = int(input("Introduce una hora: (0-22)"))
+        while horaDeseada not in range(0, 23):
+            print("La hora introducida no es válida")
+            horaDeseada = int(input("Introduce una hora: (entre 0-22): "))
 
-    while horaDeseada not in range(0, 24):
-        print("La hora introducida no es válida")
-        horaDeseada = int(input("Introduce una hora: (entre 0-23): "))
-
-    if horaDeseada == 23 and diaDeseado == int(limiteDia):
-        print("No se puede consultar el tiempo a las 23:00 del último día ya que el JS")
-        print("Volviendo al menú...")
-        return
-
-    elif horaDeseada == 23:
-        diaDeseado = int(diaDeseado) + 1
-        horaDeseada = 0
+    else:  # En cualquier otro caso, la hora máxima a consultar es 23
+        horaDeseada = int(input("Introduce una hora: (0-23)"))
+        while horaDeseada not in range(0, 24):
+            print("La hora introducida no es válida")
+            horaDeseada = int(input("Introduce una hora: (entre 0-23): "))
+        if (
+            horaDeseada == 23
+        ):  # Si la hora introducida es 23, el día deseado será el siguiente
+            diaDeseado = int(diaDeseado) + 1
+            horaDeseada = 0
     # Lo redondeamos para que lo entienda el json
     horaDeseada = redondearHora(horaDeseada)
     print(f"La hora deseada es {horaDeseada}")
 
-    # Voy a comprobar que si la hora introducida es 23 y estamos en el límite del día, no se pueda hacer la consulta
-    # if horaDeseada == "23" and diaDeseado == limiteDia:
-    #    print("No se puede consultar el tiempo a las 23:00 del último día")
-    #    print("Volviendo al menú...")
-    #    return
-    # En cambio, si la hora
-
-    print(f"La hora deseada es {horaDeseada}")
     # Voy a buscar esa fecha y a mostrar sus características
     for item in datosClima5Dias["list"]:
         itemDia = item["dt_txt"].split(" ")[0].split("-")[2]
