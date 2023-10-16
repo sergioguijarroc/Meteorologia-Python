@@ -123,10 +123,12 @@ def opcion2(datosClima5Dias):
 
 def fechaProximosDiasString(fecha, dias):
     fechaActual = datetime.now()
-    fechaDiaDeseado = fechaActual + timedelta(days=dias)
+    fechaDiaDeseado = fechaActual + timedelta(
+        days=dias
+    )  # timedelta es una función que nos permite sumar días a una fecha
     return fechaDiaDeseado.strftime(
         "%Y-%m-%d"
-    )  # Lo devuelvo en ese formato para que se pueda comparar con el json que nos devuelve la api.
+    )  # Lo devuelvo en como String en ese formato para que se pueda comparar con el json que nos devuelve la api.
 
 
 def opcion3(datosClima5Dias):
@@ -137,7 +139,9 @@ def opcion3(datosClima5Dias):
 
     # Busco el límite de días.
     diaHoy = datetime.now().strftime("%Y-%m-%d").split("-")[2]
-    limiteDia = fechaProximosDiasString(datetime.now(), 4).split("-")[2]
+    limiteDia = fechaProximosDiasString(datetime.now(), 4).split("-")[
+        2
+    ]  # Con esto, obtengo el día límite de los 4 días siguientes
     # Ahora, pido al usuario el día que quiere dentro de los límites del JSON
     # Tiene que elegir un día entre el de hoy y rangoDias
     diaDeseado = int(
@@ -237,10 +241,6 @@ print("Bienvenido a tu meteorólogo de confianza")
 # Declaramos variables globales
 lugarConsultado, datosClimaActual, datosClima5Dias = obtener_datos_clima()
 
-# Menú
-
-
-# Pregunto al usuario que quiere saber
 salir = False
 while salir == False:
     menu()
