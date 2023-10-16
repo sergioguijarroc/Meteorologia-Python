@@ -154,17 +154,15 @@ def opcion3(datosClima5Dias):
         )
     print(f"El día deseado es {diaDeseado}")
     # Ahora, voy a pedir la hora
-    horaDeseada = int(input("Introduce una hora: (00, 03, 06, 09, 12, 15, 18, 21): "))
+    horaDeseada = int(
+        input("Introduce una hora: (0-23)")
+    )  # Si el usuario introduce 23, el programa no funciona ya que redondea para arriba y no hay datos para esa hora en ese día en concreto
+    while horaDeseada not in range(0, 24):
+        print("La hora introducida no es válida")
+        horaDeseada = int(input("Introduce una hora: (entre 0-23): "))
+    # Lo redondeamos para que lo entienda el json
+    horaDeseada = redondearHora(horaDeseada)
     print(f"La hora deseada es {horaDeseada}")
-    while horaDeseada not in range(
-        0, 24, 3
-    ):  # El tercer parámetro del range es el salto que dará, en este caso de 3 en 3
-        print("La hora introducida no es múltiplo de 3")
-        horaDeseada = int(
-            input("Introduce una hora: (00, 03, 06, 09, 12, 15, 18, 21): ")
-        )
-    horaDeseada = str(horaDeseada).zfill(2)  # Con esto añado un 0 a la izquierda
-
     # Voy a buscar esa fecha y a mostrar sus características
     for item in datosClima5Dias["list"]:
         itemDia = item["dt_txt"].split(" ")[0].split("-")[2]
@@ -189,6 +187,22 @@ def opcion3(datosClima5Dias):
             print(
                 f"El nivel de nubes es de : {nubes} %, por lo tanto estará {nubosidad}"
             )
+
+
+def redondearHora(hora):
+    horaADevolver = hora
+
+    if hora == 23:
+        horaADevolver = 21  # Aquí hacemos una pequeña trampa, ya que si el usuario introduce 23, el programa no funciona ya que redondea para arriba y no hay datos para esa hora en ese día en concreto
+    elif hora % 3 == 1:  # Si el residuo es 1, le restamos 1 para redondear hacia abajo
+        horaADevolver = hora - 1
+    elif hora % 3 == 2:  # Si el residuo es 2, le sumamos 1 para redondear hacia arriba
+        horaADevolver = hora + 1
+    # Si el residuo es 0, no hacemos nada
+    horaADevolver = str(horaADevolver).zfill(
+        2
+    )  # Si la hora es por ejemplo 3, le añadimos un 0 a la izquierda para que quede 03 para que lo lea bien el json
+    return horaADevolver
 
 
 def comprobarNubosidad(nubes):
