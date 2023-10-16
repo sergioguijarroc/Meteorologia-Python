@@ -43,6 +43,7 @@ def obtenerTemperaturaMinimaDia(fecha):
     return minTemp
 
 
+def obtener_datos_clima():
     while True:
         lugar = input(
             "Para empezar, dime cualquier lugar del mundo el cual quieres consultar: "
