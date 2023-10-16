@@ -145,7 +145,9 @@ def opcion3(datosClima5Dias):
             f"Introduce un día teniendo en cuenta que hoy es {diaHoy} y el límite es {limiteDia}:"
         )
     )
-    while diaDeseado not in range(int(diaHoy), int(limiteDia) + 1):
+    while diaDeseado not in range(
+        int(diaHoy) + 1, int(limiteDia) + 1
+    ):  # El día de hoy se podría consultar, pero no tiene sentido ya que hay una opción para consultar el tiempo del día de hoy
         print("El día introducido no está dentro del rango de los 4 días siguientes")
         diaDeseado = int(
             input(
@@ -175,10 +177,12 @@ def opcion3(datosClima5Dias):
         ):  # Si la hora introducida es 23, el día deseado será el siguiente
             diaDeseado = int(diaDeseado) + 1
             horaDeseada = 0
-    # Lo redondeamos para que lo entienda el json
-    horaDeseada = redondearHora(horaDeseada)
-    print(f"La hora deseada es {horaDeseada}")
+            print(
+                "Te vamos a mostrar el tiempo para el día siguiente a las 00:00 horas"
+            )  # Este comentario me parece necesario para la usabilidad del programa
 
+    # Lo redondeamos para que lo entienda el json
+    horaRedondeada = redondearHora(horaDeseada)
     # Voy a buscar esa fecha y a mostrar sus características
     for item in datosClima5Dias["list"]:
         itemDia = item["dt_txt"].split(" ")[0].split("-")[2]
@@ -186,7 +190,7 @@ def opcion3(datosClima5Dias):
         # print(
         #    f"El día del item es {itemDia}, y el día deseado es {diaDeseado}, la hora del item es {itemHora}, y la hora deseada es {horaDeseada}"
         # )
-        if str(itemDia) == str(diaDeseado) and str(itemHora) == str(horaDeseada):
+        if str(itemDia) == str(diaDeseado) and str(itemHora) == str(horaRedondeada):
             temp = item["main"]["temp"]
             tempMax = item["main"]["temp_max"]
             tempMin = item["main"]["temp_min"]
@@ -195,12 +199,12 @@ def opcion3(datosClima5Dias):
             sensTermica = item["main"]["feels_like"]
             nubosidad = comprobarNubosidad(nubes)
 
-            print(f"Tiempo para el día {diaDeseado} a las {horaDeseada}:")
+            print(f"\nTiempo para el día {diaDeseado} a las {horaDeseada}:00 horas: ")
             print(f"La temperatura será de : {temp} ºC")
             print(f"La sensación térmica será de : {sensTermica} ºC")
             print(f"La velocidad del viento será de : {velViento} KM/h")
             print(
-                f"El nivel de nubes es de : {nubes} %, por lo tanto estará {nubosidad}"
+                f"El nivel de nubes será de : {nubes} %, por lo tanto estará {nubosidad}"
             )
 
 
