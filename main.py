@@ -203,12 +203,14 @@ def opcion3(datosClima5Dias):
             sensTermica = item["main"]["feels_like"]
             nubosidad = comprobarNubosidad(nubes)
 
-            print(f"\nTiempo para el día {diaDeseado} a las {horaDeseada}:00 horas: ")
+            print(
+                f"\nTiempo para el día {diaDeseado} a las {horaRedondeada}:00 horas: "
+            )
             print(f"La temperatura será de : {temp} ºC")
             print(f"La sensación térmica será de : {sensTermica} ºC")
             print(f"La velocidad del viento será de : {velViento} KM/h")
             print(
-                f"El nivel de nubes será de : {nubes} %, por lo tanto estará {nubosidad}"
+                f"El nivel de nubes será de : {nubes} %, por lo tanto, estará {nubosidad}"
             )
 
 
