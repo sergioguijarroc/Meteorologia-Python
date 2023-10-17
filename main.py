@@ -17,7 +17,9 @@ def menu():
 
 
 def obtenerTemperaturaMaximaDia(fecha):
-    maxTemp = -200
+    maxTemp = (
+        -200
+    )  # Inicializo la variable a un valor muy bajo para que se pueda comparar con el primer item
     tempMaxItemActual = -200
     for item in datosClima5Dias["list"]:
         itemFecha = item["dt_txt"].split(" ")[
@@ -31,7 +33,7 @@ def obtenerTemperaturaMaximaDia(fecha):
 
 
 def obtenerTemperaturaMinimaDia(fecha):
-    minTemp = 200
+    minTemp = 200  # Inicializo la variable a un valor muy alto para que se pueda comparar con el primer item
     minTempItemActual = 200
 
     for item in datosClima5Dias["list"]:
@@ -44,25 +46,33 @@ def obtenerTemperaturaMinimaDia(fecha):
 
 
 def obtener_datos_clima():
-    while True:
+    while True:  # Bucle infinito hasta que se introduzca un lugar válido que exista
         lugar = input(
             "Para empezar, dime cualquier lugar del mundo el cual quieres consultar: "
         )
-        datos_clima_actual = obtenerJsonTiempoActual(lugar)
-        datos_clima_5dias = obtenerJsonTiempoEn5Dias(lugar)
+        datosClimaActual = obtenerJsonTiempoActual(
+            lugar
+        )  # Llamo a la función para obtener los datos del tiempo actual
+        datosClima5Dias = obtenerJsonTiempoEn5Dias(
+            lugar
+        )  # Llamo a la función para obtener los datos del tiempo en 5 días
 
-        if datos_clima_actual is not None and datos_clima_5dias is not None:
-            return lugar, datos_clima_actual, datos_clima_5dias
+        if (
+            datosClimaActual is not None and datosClima5Dias is not None
+        ):  # Si no son nulos, los devuelvo y así consigo salir del bucle
+            return lugar, datosClimaActual, datosClima5Dias
         else:
             print("Lugar no encontrado. Introduce un lugar válido.")
 
 
 def obtenerJsonTiempoActual(lugar):
-    urlTiempoActual = f"https://api.openweathermap.org/data/2.5/weather?q={lugar}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"
+    urlTiempoActual = f"https://api.openweathermap.org/data/2.5/weather?q={lugar}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"  # La url de la api con el lugar a consultar
     try:
         # Realiza la solicitud GET a la urlTiempoActual para comprobar que comunica.
         responseActual = requests.get(urlTiempoActual)
-        if responseActual.status_code == 200:
+        if (
+            responseActual.status_code == 200
+        ):  # Si el código de estado es 200, se ha realizado correctamente la solicitud
             return responseActual.json()
         else:
             print(
@@ -113,10 +123,12 @@ def opcion2(datosClima5Dias):
     print("--------------------Opción2--------------------")
     # bucle for tradicional para usar el range y poder iterar en los 4 días siguientes
     for i in range(1, 5):
-        fechaAProcesar = fechaProximosDiasString(datetime.now(), i)
+        fechaAProcesar = fechaProximosDiasString(
+            datetime.now(), i
+        )  # Con esto, consigo el String de la fecha
         maxTemp = obtenerTemperaturaMaximaDia(fechaAProcesar)
         minTemp = obtenerTemperaturaMinimaDia(fechaAProcesar)
-        print(f"La temperatura máxima para {fechaAProcesar} es de {maxTemp} ºC")
+        print(f"\nLa temperatura máxima para {fechaAProcesar} es de {maxTemp} ºC")
         print(f"La temperatura mínima para {fechaAProcesar} es de {minTemp} ºC\n")
     print("--------------------------------------------")
 
@@ -134,7 +146,7 @@ def fechaProximosDiasString(fecha, dias):
 def opcion3(datosClima5Dias):
     print("--------------------Opción3--------------------")
     print(
-        "En esta opción, indícame un día \n(como mínimo un día después de hoy y como máximo 4 días después de hoy) y una hora"
+        "En esta opción, indícame un día y una hora\n(ten en cuenta que debe ser como mínimo un día después de hoy y como máximo 4 días después de hoy)"
     )
 
     # Busco el límite de días.
@@ -150,9 +162,11 @@ def opcion3(datosClima5Dias):
         )
     )
     while diaDeseado not in range(
-        int(diaHoy) + 1, int(limiteDia) + 1
+        int(diaHoy) + 1, int(limiteDia) + 1  # Entre mañana y el día límite
     ):  # El día de hoy se podría consultar, pero no tiene sentido ya que hay una opción para consultar el tiempo del día de hoy
-        print("El día introducido no está dentro del rango de los 4 días siguientes")
+        print(
+            f"El día introducido no está dentro del rango de los 4 días de entre mañana y el día {limiteDia} "
+        )
         diaDeseado = int(
             input(
                 f"Introduce un día teniendo en cuenta que hoy es {diaHoy} y el límite es {limiteDia}:"
@@ -178,7 +192,7 @@ def opcion3(datosClima5Dias):
             horaDeseada = int(input("Introduce una hora: (entre 0-23): "))
         if (
             horaDeseada == 23
-        ):  # Si la hora introducida es 23, el día deseado será el siguiente
+        ):  # Si la hora introducida es 23, el día deseado será el del día siguiente
             diaDeseado = int(diaDeseado) + 1
             horaDeseada = 0
             print(
@@ -189,11 +203,13 @@ def opcion3(datosClima5Dias):
     horaRedondeada = redondearHora(horaDeseada)
     # Voy a buscar esa fecha y a mostrar sus características
     for item in datosClima5Dias["list"]:
-        itemDia = item["dt_txt"].split(" ")[0].split("-")[2]
-        itemHora = item["dt_txt"].split(" ")[1].split(":")[0]
-        # print(
-        #    f"El día del item es {itemDia}, y el día deseado es {diaDeseado}, la hora del item es {itemHora}, y la hora deseada es {horaDeseada}"
-        # )
+        itemDia = (
+            item["dt_txt"].split(" ")[0].split("-")[2]
+        )  # Con esto obtengo el día del item actual, y la divido en dos partes, la fecha y la hora, y me quedo con la fecha
+        itemHora = (
+            item["dt_txt"].split(" ")[1].split(":")[0]
+        )  # Igual que antes, pero con la hora
+
         if str(itemDia) == str(diaDeseado) and str(itemHora) == str(horaRedondeada):
             temp = item["main"]["temp"]
             tempMax = item["main"]["temp_max"]
@@ -210,7 +226,7 @@ def opcion3(datosClima5Dias):
             print(f"La sensación térmica será de : {sensTermica} ºC")
             print(f"La velocidad del viento será de : {velViento} KM/h")
             print(
-                f"El nivel de nubes será de : {nubes} %, por lo tanto, estará {nubosidad}"
+                f"El nivel de nubes será de : {nubes} %, por lo tanto, estará {nubosidad}\n"
             )
 
 
@@ -239,6 +255,7 @@ def comprobarNubosidad(nubes):
     return nubosidad
 
 
+# Inicio del programa
 print("Bienvenido a tu meteorólogo de confianza")
 # Declaramos variables globales
 lugarConsultado, datosClimaActual, datosClima5Dias = obtener_datos_clima()
