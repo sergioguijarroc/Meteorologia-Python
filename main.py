@@ -150,7 +150,6 @@ def opcion3(datosClima5Dias):
     )
 
     # Busco el límite de días.
-    # diaHoy = datetime.now().strftime("%Y-%m-%d").split("-")[2]
     diaHoy = fechaProximosDiasString(datetime.now(), 0).split("-")[2]
     limiteDia = fechaProximosDiasString(datetime.now(), 4).split("-")[
         2

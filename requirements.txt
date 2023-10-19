@@ -1,3 +1,1 @@
-pyttsx3==2.90 
-espeak==1.48.04 
 requests==2.26.0 
