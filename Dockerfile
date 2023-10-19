@@ -1,14 +1,18 @@
-# Usa una imagen base, por ejemplo, Python para aplicaciones Python.
-FROM python:3.8
+# Usa una imagen base de Ubuntu
+FROM ubuntu:latest
 
-# Establece el directorio de trabajo en el contenedor.
+# Instala las actualizaciones del sistema y Python
+RUN apt-get update -y && apt-get install -y python3-pip
+
+# Crea un directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copia los archivos de tu proyecto al contenedor.
-COPY . /app
+# Copia tu programa y el archivo de requisitos al contenedor
+COPY main.py .
+COPY requirements.txt .
 
-# Instala las dependencias.
-RUN pip install -r requirements.txt 
+# Instala las dependencias de Python
+RUN pip3 install -r requirements.txt
 
-# Especifica el comando para ejecutar tu aplicación.
-CMD ["python", "main.py"]
+# Ejecuta tu programa al iniciar el contenedor
+CMD ["python3", "main.py"]
