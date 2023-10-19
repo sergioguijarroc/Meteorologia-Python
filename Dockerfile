@@ -1,18 +1,17 @@
-# Usa una imagen base de Ubuntu
-FROM ubuntu:latest
+# Usa una imagen base python 3.11.6-slim-bullseye
+FROM python:3.11.6-slim-bullseye
 
-# Instala las actualizaciones del sistema y Python
+# Instalo las actualizaciones del sistema y Python
 RUN apt-get update -y && apt-get install -y python3-pip
 
-# Crea un directorio de trabajo en el contenedor
+#Copio el contenido del directorio actual en el directorio de trabajo del contenedor
+COPY . /app
+
+# Establezco el directorio de trabajo
 WORKDIR /app
 
-# Copia tu programa y el archivo de requisitos al contenedor
-COPY main.py .
-COPY requirements.txt .
-
-# Instala las dependencias de Python
+# Instalo las dependencias de Python
 RUN pip3 install -r requirements.txt
 
-# Ejecuta tu programa al iniciar el contenedor
-CMD ["python3", "main.py"]
+# Ejecuto mi programa al iniciar el contenedor
+CMD ["python3","-i", "index.py"]
