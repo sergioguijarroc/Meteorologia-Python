@@ -2,7 +2,10 @@
 FROM python:3.11.6-slim-bullseye
 
 # Instalo las actualizaciones del sistema y Python
-RUN apt-get update -y && apt-get install -y python3-pip
+apt-get update -y && \
+    apt-get install -y \
+    python3-pip
+
 
 #Copio el contenido del directorio actual en el directorio de trabajo del contenedor
 COPY . /app
