@@ -4,66 +4,7 @@ from datetime import datetime, timedelta
 
 # Funciones necesarias
 
-
-def menu():
-    print("\n--------------------Menu--------------------")
-    print("1. Tiempo actual")
-    print("2. Tiempo en los próximos 4 días")
-    print("3. Tiempo en un día y hora concreta")
-    print("4. Cambiar el lugar a consultar")
-    print("5. Salir")
-    print("--------------------------------------------")
-
-
-def obtenerTemperaturaMaximaDia(fecha):
-    maxTemp = (
-        -200
-    )  # Inicializo la variable a un valor muy bajo para que se pueda comparar con el primer item
-    tempMaxItemActual = -200
-    for item in datosClima5Dias["list"]:
-        itemFecha = item["dt_txt"].split(" ")[
-            0
-        ]  # Con esto obtengo la fecha del item actual, y la divido en dos partes, la fecha y la hora, y me quedo con la fecha
-        if fecha == itemFecha:
-            tempMaxItemActual = float(item["main"]["temp_max"])
-            if tempMaxItemActual > maxTemp:
-                maxTemp = tempMaxItemActual
-    return maxTemp
-
-
-def obtenerTemperaturaMinimaDia(fecha):
-    minTemp = 200  # Inicializo la variable a un valor muy alto para que se pueda comparar con el primer item
-    minTempItemActual = 200
-
-    for item in datosClima5Dias["list"]:
-        fechaItemActual = item["dt_txt"].split(" ")[0]
-        if fechaItemActual == fecha:
-            minTempItemActual = item["main"]["temp_min"]
-            if minTempItemActual < minTemp:
-                minTemp = minTempItemActual
-    return minTemp
-
-
-def obtener_datos_clima():
-    while True:  # Bucle infinito hasta que se introduzca un lugar válido que exista
-        lugar = input(
-            "Para empezar, dime cualquier lugar del mundo el cual quieres consultar: "
-        )
-        datosClimaActual = obtenerJsonTiempoActual(
-            lugar
-        )  # Llamo a la función para obtener los datos del tiempo actual
-        datosClima5Dias = obtenerJsonTiempoEn5Dias(
-            lugar
-        )  # Llamo a la función para obtener los datos del tiempo en 5 días
-
-        if (
-            datosClimaActual is not None and datosClima5Dias is not None
-        ):  # Si no son nulos, los devuelvo y así consigo salir del bucle
-            return lugar, datosClimaActual, datosClima5Dias
-        else:
-            print("Lugar no encontrado. Introduce un lugar válido.")
-
-
+#Funciones con la obtención de datos del clima:
 def obtenerJsonTiempoActual(lugar):
     urlTiempoActual = f"https://api.openweathermap.org/data/2.5/weather?q={lugar}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"  # La url de la api con el lugar a consultar
     try:
@@ -81,7 +22,6 @@ def obtenerJsonTiempoActual(lugar):
     except requests.exceptions.RequestException as e:
         print(f"Error de conexión: {e}")
 
-
 def obtenerJsonTiempoEn5Dias(lugar):
     urlTiempo5Dias = f"https://api.openweathermap.org/data/2.5/forecast?q={lugar}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"
     try:
@@ -97,6 +37,40 @@ def obtenerJsonTiempoEn5Dias(lugar):
     except requests.exceptions.RequestException as e:
         print(f"Error de conexión: {e}")
 
+#Funciones auxiliares:
+def comprobarNubosidad(nubes):
+    if 0 < nubes < 50:
+        nubosidad = "algo nublado"
+    elif nubes >= 50:
+        nubosidad = "muy nublado"
+    else:
+        nubosidad = "despejado de nubes"
+    return nubosidad
+
+def fechaProximosDiasString(fecha, dias):
+    fechaActual = datetime.now()
+    fechaDiaDeseado = fechaActual + timedelta(
+        days=dias
+    )  # timedelta es una función que nos permite sumar días a una fecha
+    return fechaDiaDeseado.strftime(
+        "%Y-%m-%d"
+    )  # Lo devuelvo en como String en ese formato para que se pueda comparar con el json que nos devuelve la api.
+
+def redondearHora(hora):
+    horaADevolver = hora
+    if hora == 23:
+        horaADevolver = 0
+    elif hora % 3 == 1:  # Si el residuo es 1, le restamos 1 para redondear hacia abajo
+        horaADevolver = hora - 1
+    elif hora % 3 == 2:  # Si el residuo es 2, le sumamos 1 para redondear hacia arriba
+        horaADevolver = hora + 1
+    # Si el residuo es 0, no hacemos nada
+    horaADevolver = str(horaADevolver).zfill(
+        2
+    )  # Si la hora es por ejemplo 3, le añadimos un 0 a la izquierda para que quede 03 para que lo lea bien el json
+    return horaADevolver
+
+#Opciones del menú:
 
 def opcion1(datosClimaActual):
     print("--------------------Opción1-------------------- \n")
@@ -117,7 +91,6 @@ def opcion1(datosClimaActual):
     print(f"El nivel de nubes es de : {nubes} %, por lo tanto está {nubosidad}")
     print("--------------------------------------------")
 
-
 def opcion2(datosClima5Dias):
     print("--------------------Opción2--------------------")
     # bucle for tradicional para usar el range y poder iterar en los 4 días siguientes
@@ -130,16 +103,6 @@ def opcion2(datosClima5Dias):
         print(f"\nLa temperatura máxima para {fechaAProcesar} es de {maxTemp} ºC")
         print(f"La temperatura mínima para {fechaAProcesar} es de {minTemp} ºC\n")
     print("--------------------------------------------")
-
-
-def fechaProximosDiasString(fecha, dias):
-    fechaActual = datetime.now()
-    fechaDiaDeseado = fechaActual + timedelta(
-        days=dias
-    )  # timedelta es una función que nos permite sumar días a una fecha
-    return fechaDiaDeseado.strftime(
-        "%Y-%m-%d"
-    )  # Lo devuelvo en como String en ese formato para que se pueda comparar con el json que nos devuelve la api.
 
 
 def opcion3(datosClima5Dias):
@@ -227,31 +190,65 @@ def opcion3(datosClima5Dias):
             print(
                 f"El nivel de nubes será de : {nubes} %, por lo tanto, estará {nubosidad}\n"
             )
+#Funciones de configuración y entrada de datos:
+
+def menu():
+    print("\n--------------------Menu--------------------")
+    print("1. Tiempo actual")
+    print("2. Tiempo en los próximos 4 días")
+    print("3. Tiempo en un día y hora concreta")
+    print("4. Cambiar el lugar a consultar")
+    print("5. Salir")
+    print("--------------------------------------------")
 
 
-def redondearHora(hora):
-    horaADevolver = hora
-    if hora == 23:
-        horaADevolver = 0
-    elif hora % 3 == 1:  # Si el residuo es 1, le restamos 1 para redondear hacia abajo
-        horaADevolver = hora - 1
-    elif hora % 3 == 2:  # Si el residuo es 2, le sumamos 1 para redondear hacia arriba
-        horaADevolver = hora + 1
-    # Si el residuo es 0, no hacemos nada
-    horaADevolver = str(horaADevolver).zfill(
-        2
-    )  # Si la hora es por ejemplo 3, le añadimos un 0 a la izquierda para que quede 03 para que lo lea bien el json
-    return horaADevolver
+def obtenerTemperaturaMaximaDia(fecha):
+    maxTemp = (
+        -200
+    )  # Inicializo la variable a un valor muy bajo para que se pueda comparar con el primer item
+    tempMaxItemActual = -200
+    for item in datosClima5Dias["list"]:
+        itemFecha = item["dt_txt"].split(" ")[
+            0
+        ]  # Con esto obtengo la fecha del item actual, y la divido en dos partes, la fecha y la hora, y me quedo con la fecha
+        if fecha == itemFecha:
+            tempMaxItemActual = float(item["main"]["temp_max"])
+            if tempMaxItemActual > maxTemp:
+                maxTemp = tempMaxItemActual
+    return maxTemp
 
 
-def comprobarNubosidad(nubes):
-    if 0 < nubes < 50:
-        nubosidad = "algo nublado"
-    elif nubes >= 50:
-        nubosidad = "muy nublado"
-    else:
-        nubosidad = "despejado de nubes"
-    return nubosidad
+def obtenerTemperaturaMinimaDia(fecha):
+    minTemp = 200  # Inicializo la variable a un valor muy alto para que se pueda comparar con el primer item
+    minTempItemActual = 200
+
+    for item in datosClima5Dias["list"]:
+        fechaItemActual = item["dt_txt"].split(" ")[0]
+        if fechaItemActual == fecha:
+            minTempItemActual = item["main"]["temp_min"]
+            if minTempItemActual < minTemp:
+                minTemp = minTempItemActual
+    return minTemp
+
+
+def obtener_datos_clima():
+    while True:  # Bucle infinito hasta que se introduzca un lugar válido que exista
+        lugar = input(
+            "Para empezar, dime cualquier lugar del mundo el cual quieres consultar: "
+        )
+        datosClimaActual = obtenerJsonTiempoActual(
+            lugar
+        )  # Llamo a la función para obtener los datos del tiempo actual
+        datosClima5Dias = obtenerJsonTiempoEn5Dias(
+            lugar
+        )  # Llamo a la función para obtener los datos del tiempo en 5 días
+
+        if (
+            datosClimaActual is not None and datosClima5Dias is not None
+        ):  # Si no son nulos, los devuelvo y así consigo salir del bucle
+            return lugar, datosClimaActual, datosClima5Dias
+        else:
+            print("Lugar no encontrado. Introduce un lugar válido.")
 
 
 # Inicio del programa
