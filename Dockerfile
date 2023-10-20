@@ -17,4 +17,4 @@ WORKDIR /app
 RUN pip3 install -r requirements.txt
 
 # Ejecuto mi programa al iniciar el contenedor
-CMD ["python3","-i", "index.py"]
+CMD ["python3","-i", "main.py"]
