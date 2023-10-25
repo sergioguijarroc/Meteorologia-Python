@@ -2,7 +2,7 @@
 FROM python:3.11.6-slim-bullseye
 
 # Instalo las actualizaciones del sistema y Python
-apt-get update -y && \
+RUN apt-get update -y && \
     apt-get install -y \
     python3-pip
 
