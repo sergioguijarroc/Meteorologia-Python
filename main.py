@@ -1,9 +1,8 @@
 import requests
 import json
 from datetime import datetime, timedelta
-
+#App para consultar el tiempo
 # Funciones necesarias
-
 #Funciones con la obtención de datos del clima:
 def obtenerJsonTiempoActual(lugar):
     urlTiempoActual = f"https://api.openweathermap.org/data/2.5/weather?q={lugar}&units=metric&appid=ddccd66e42b270c765e7ea196e4e220c"  # La url de la api con el lugar a consultar
